@@ -16,7 +16,7 @@ resource "null_resource" "provisioner" {
     inline = [
       "yum install make -y",
       "git clone https://DevOps-Batches@dev.azure.com/DevOps-Batches/DevOps53/_git/shell-scripting",
-      "cd shell-scripting/roboshop-project"
+      "cd shell-scripting/roboshop-project",
       "make ${var.COMPONENT}"
     ]
   }
