@@ -35,9 +35,9 @@ resource "aws_security_group" "allow-ssh" {
 resource "null_resource" "provisioner" {
   provisioner "remote-exec" {
     connection {
-      host              = aws_instance.ami_instance.public_ip
-      user              = "root"
-      password          = "DevOps321" // Hardcoding the username and password in code is the worst idea and it causes security breaches as well
+      host                = aws_instance.ami_instance.public_ip
+      user                = "root"
+      password            = "DevOps321" // Hardcoding the username and password in code is the worst idea and it causes security breaches as well
     }
     inline = [
       "yum install make -y",
@@ -46,4 +46,10 @@ resource "null_resource" "provisioner" {
       "make ${var.COMPONENT}"
     ]
   }
+}
+
+resource "aws_ami_from_instance" "ami" {
+  depends_on              = [null_resource.provisioner]
+  name                    = var.COMPONENT
+  source_instance_id      = aws_instance.ami_instance.id
 }
