@@ -1,10 +1,36 @@
 resource "aws_instance" "ami_instance" {
   ami                     = data.aws_ami.ami.id
   instance_type           = "t3.small"
+  vpc_security_group_ids  = [aws_security_group.allow-ssh.id]
   tags                    = {
         Name              = "${var.COMPONENT}-ami"
   }
 }
+
+resource "aws_security_group" "allow-ssh" {
+  name                    = "allow-${var.COMPONENT}-ami-sg"
+  description             = "allow-${var.COMPONENT}-ami-sg"
+
+  ingress {
+    description           = "SSH"
+    from_port             = 22
+    to_port               = 22
+    protocol              = "tcp"
+    cidr_blocks           = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port             = 0
+    to_port               = 0
+    protocol              = "-1"
+    cidr_blocks           = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name                  = "allow-${var.COMPONENT}-ami-sg"
+  }
+}
+
 
 resource "null_resource" "provisioner" {
   provisioner "remote-exec" {
