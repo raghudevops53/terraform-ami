@@ -40,6 +40,7 @@ resource "null_resource" "provisioner" {
       password            = jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string)["SSH_PASS"]
     }
     inline = [
+      "sudo yum install ansible -y",
       "ansible-pull -i localhost, -U https://DevOps-Batches@dev.azure.com/DevOps-Batches/DevOps53/_git/ansible roboshop-project/roboshop.yml -var ENV=${var.ENV} -var component=${var.COMPONENT}"
     ]
   }
