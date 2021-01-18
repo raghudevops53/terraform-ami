@@ -41,7 +41,7 @@ resource "null_resource" "provisioner" {
     }
     inline = [
       "sudo yum install ansible -y",
-      "ansible-pull -i localhost, -U https://DevOps-Batches@dev.azure.com/DevOps-Batches/DevOps53/_git/ansible roboshop-project/roboshop.yml -e ENV=${var.ENV} -e component=${var.COMPONENT}"
+      "ansible-pull -i localhost, -U https://DevOps-Batches@dev.azure.com/DevOps-Batches/DevOps53/_git/ansible roboshop-project/roboshop.yml -e ENV=${var.ENV} -e component=${var.COMPONENT} -e APP_ARTIFACT_VERSION=${var.APP_ARTIFACT_VERSION} -e PAT=${jsondecode(data.aws_secretsmanager_secret_version.creds.secret_string)["PAT"]}"
     ]
   }
 }
